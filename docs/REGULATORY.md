@@ -64,13 +64,30 @@ Cures Act** thinking and general-wellness/medical-information concepts:
 4. **Human in the loop / escalation-first.** Every pathway directs to a clinician
    or emergency care and repeats that it does not replace medical care.
 
-**Open risk to flag for counsel:** patient-/caregiver-facing software that drives
-a specific action is scrutinized more heavily than provider-facing CDS. The
-"non-device CDS" criteria are clearest for software intended for *healthcare
-providers*. A layperson-facing, condition-oriented triage tool may still be
-viewed as a device depending on specific claims and framing. Marketing language,
-the on-field first-response content, and any future personalization should be
-reviewed carefully.
+**Key finding (from the sourced research review) — flag for counsel:** the FDA
+non-device CDS exclusion under the 21st Century Cures Act is built around software
+that supports a **healthcare professional**, not a patient or caregiver. FDA's CDS
+guidance (updated Jan 2026) applies the exclusion only when all four criteria are
+met *and* the recommendation is HCP-directed; FDA also states digital-health
+device policies continue to apply to functions intended for **patients or
+caregivers**. Therefore a patient-facing youth-injury triage app is **likely NOT
+protected by the non-device CDS exclusion**, even though its logic is transparent
+and citation-backed. Transparency is good product design and trust, but it does
+not by itself move a patient-facing, condition-oriented triage recommendation into
+the safe harbor. The "general wellness" category is also a poor fit, since the app
+addresses injury and care escalation rather than general healthy living.
+
+**Therefore the conservative, defensible posture is to design and message Next Play
+as a navigation + hand-off tool** that (a) never diagnoses, (b) never clears return
+to play, (c) always routes toward clinician involvement, (d) presents transparent,
+citation-backed rules, and (e) is framed as *support for contacting appropriate
+care*, not a substitute for professional judgment. FDA's own examples are more
+favorable to software that helps users **organize, record, and share** health
+information with clinicians than to software that appears to replace clinician
+reasoning. Get formal FDA/regulatory counsel before launch; review marketing
+claims, the on-field first-response content, and any future personalization.
+Published symptom-checker literature is a warning against overconfidence
+(accuracy is variable), which supports the deliberate **over-triage bias**.
 
 ## 5. Risk analysis (initial hazard list)
 

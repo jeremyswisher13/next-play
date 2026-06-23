@@ -39,6 +39,10 @@ export const emergencyActions: EmergencyAction[] = [
         es: "Si no respira con normalidad, comience RCP — empuje fuerte y rápido en el centro del pecho.",
       },
       {
+        en: "Gasping, or brief jerking right after the collapse, can still be cardiac arrest — do not wait, start CPR.",
+        es: "Jadear, o sacudidas breves justo después del colapso, aún puede ser un paro cardíaco — no espere, comience RCP.",
+      },
+      {
         en: "Use the AED as soon as it arrives and follow its spoken instructions.",
         es: "Use el DEA en cuanto llegue y siga sus instrucciones habladas.",
       },
@@ -92,6 +96,10 @@ export const emergencyActions: EmergencyAction[] = [
         es: "No mueva al atleta ni le gire el cuello.",
       },
       {
+        en: "Do not sit them up or try to walk them off the field.",
+        es: "No lo siente ni intente sacarlo del campo caminando.",
+      },
+      {
         en: "Keep the head and neck still, in the position you found them.",
         es: "Mantenga la cabeza y el cuello quietos, en la posición en que los encontró.",
       },
@@ -117,6 +125,10 @@ export const emergencyActions: EmergencyAction[] = [
       {
         en: "If it soaks through, add more cloth on top — do not remove the first layer.",
         es: "Si se empapa, agregue más tela encima — no retire la primera capa.",
+      },
+      {
+        en: "If an arm or leg is bleeding badly and won't stop, use a tourniquet if you have one and know how.",
+        es: "Si un brazo o una pierna sangra mucho y no se detiene, use un torniquete si tiene uno y sabe cómo.",
       },
       {
         en: "Keep the athlete still and warm until help arrives.",

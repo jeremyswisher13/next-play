@@ -4,7 +4,7 @@ import { getBodyRegion } from "@/content/bodyRegions";
 import { getMechanism } from "@/content/mechanisms";
 import { getRedFlag, screenedRedFlags } from "@/content/redFlags";
 import { roles } from "@/content/roles";
-import { functionalQuestions } from "@/content/functionalQuestions";
+import { functionalQuestionsFor } from "@/content/functionalQuestions";
 
 export interface SummaryRow {
   label: string;
@@ -48,7 +48,7 @@ export function buildSummaryRows(
         : ui.common.unsure;
   };
 
-  const functionalLines = functionalQuestions
+  const functionalLines = functionalQuestionsFor(intake.bodyRegion)
     .map((q) => {
       const v = intake.functional[q.key];
       if (!v) return null;

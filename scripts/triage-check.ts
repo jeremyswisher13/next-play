@@ -4,7 +4,13 @@
  */
 import { evaluateTriage } from "../src/lib/triage";
 import { screenedRedFlags } from "../src/content/redFlags";
-import type { BodyRegionId, Intake, MechanismId, Pathway } from "../src/lib/types";
+import { functionalQuestionsFor } from "../src/content/functionalQuestions";
+import type {
+  BodyRegionId,
+  Intake,
+  MechanismId,
+  Pathway,
+} from "../src/lib/types";
 
 function intake(p: Partial<Intake>): Intake {
   return {
@@ -276,6 +282,76 @@ check(
   "sportsMed",
   { roadmap: "elbowThrowing" },
 );
+
+// 24. Wrist + fall + bone tenderness → urgent (scaphoid)
+check(
+  "Wrist + fall + bone tenderness (scaphoid)",
+  intake({
+    bodyRegion: "wrist",
+    mechanism: "fall",
+    functional: { boneTenderness: "yes" },
+  }),
+  "urgent",
+);
+
+// 25. Youth hip/knee safeguard (SCFE / physeal) — young knee, mild → sportsMed
+check(
+  "Young + knee, mild improving → sportsMed (SCFE/physeal safeguard)",
+  intake({
+    athlete: { age: 12 },
+    bodyRegion: "knee",
+    mechanism: "twist",
+    functional: { canWalk: "yes", trend: "improving", pop: "no" },
+  }),
+  "sportsMed",
+  { roadmap: "knee" },
+);
+
+// 26. Adult control: same knee picture → monitor (youth rule must not fire)
+check(
+  "Adult + knee, mild improving → monitor",
+  intake({
+    athlete: { age: 25 },
+    bodyRegion: "knee",
+    mechanism: "twist",
+    functional: { canWalk: "yes", trend: "improving", pop: "no" },
+  }),
+  "monitor",
+);
+
+// 27. Exertional cardiac symptoms → urgent (never monitor)
+check(
+  "Exertional cardiac symptoms → urgent",
+  intake({
+    bodyRegion: "other",
+    mechanism: "sprinting",
+    redFlags: ["exertionalCardiac"],
+  }),
+  "urgent",
+);
+
+// ── Region-appropriate follow-up questions (no weird/irrelevant prompts) ─────
+function rel(name: string, ok: boolean) {
+  if (ok) {
+    pass++;
+    console.log(`✓ ${name}`);
+  } else {
+    fail++;
+    console.log(`✗ ${name}`);
+  }
+}
+const fqHas = (region: BodyRegionId, key: string) =>
+  functionalQuestionsFor(region).some((q) => q.key === key);
+
+rel("Shoulder does NOT ask 'can walk'", !fqHas("shoulder", "canWalk"));
+rel("Concussion does NOT ask about bruising", !fqHas("head", "bruising"));
+rel("Concussion does NOT ask about a 'pop'", !fqHas("head", "pop"));
+rel("Heat does NOT ask about swelling", !fqHas("heat", "swelling"));
+rel("Ankle DOES ask 'can walk'", fqHas("ankle", "canWalk"));
+rel("Wrist DOES ask about bone tenderness", fqHas("wrist", "boneTenderness"));
+rel("Every region asks the trend question", (
+  ["head", "heat", "shoulder", "ankle", "neck"] as BodyRegionId[]
+).every((r) => fqHas(r, "trend")));
 
 // ── Reachability: the dangerous flags must be checkable under mis-coding ─────
 function reachable(

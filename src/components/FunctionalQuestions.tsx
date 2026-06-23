@@ -1,6 +1,6 @@
 "use client";
 
-import { functionalQuestions } from "@/content/functionalQuestions";
+import { functionalQuestionsFor } from "@/content/functionalQuestions";
 import { useIntake } from "@/lib/store";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -69,7 +69,7 @@ export function FunctionalQuestions() {
 
   return (
     <div className="space-y-5">
-      {functionalQuestions.map((q) => {
+      {functionalQuestionsFor(intake.bodyRegion).map((q) => {
         const options = q.kind === "yesno" ? yesNo : trend;
         const current = intake.functional[q.key];
         return (

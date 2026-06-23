@@ -88,6 +88,17 @@ export const redFlags: RedFlag[] = [
     label: { en: "Trouble breathing", es: "Dificultad para respirar" },
   },
   {
+    // Exertional cardiac symptoms short of frank chest pain/fainting — these
+    // must never sit in "monitor" (sudden cardiac death risk in young athletes).
+    id: "exertionalCardiac",
+    tier: "urgent",
+    category: "global",
+    label: {
+      en: "Racing, pounding, or irregular heartbeat, or feeling lightheaded or unusually out of breath during exercise",
+      es: "Latidos rápidos, fuertes o irregulares, o sentirse mareado o con falta de aire inusual durante el ejercicio",
+    },
+  },
+  {
     id: "openWound",
     tier: "emergency",
     category: "global",

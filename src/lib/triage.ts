@@ -142,10 +142,18 @@ export function evaluateTriage(intake: Intake): TriageResult {
     checkedUrgent.length > 0 ||
     fn.canWalk === "no" ||
     fn.canMove === "no" ||
-    (fn.pop === "yes" && fn.swelling === "yes")
+    (fn.pop === "yes" && fn.swelling === "yes") ||
+    (region === "wrist" && mech === "fall" && fn.boneTenderness === "yes")
   ) {
     pathway = "urgent";
     checkedUrgent.forEach((f) => reasons.push(flagLabel(f.id)));
+    if (region === "wrist" && mech === "fall" && fn.boneTenderness === "yes")
+      reasons.push(
+        L(
+          "Pain right over the bone on the thumb side of the wrist after a fall can be a scaphoid fracture — easy to miss and worth a same-day check.",
+          "El dolor justo sobre el hueso del lado del pulgar de la muñeca después de una caída puede ser una fractura del escafoides — fácil de pasar por alto y conviene revisarlo el mismo día.",
+        ),
+      );
     if (fn.canWalk === "no")
       reasons.push(
         L(
@@ -217,9 +225,21 @@ export function evaluateTriage(intake: Intake): TriageResult {
     mech === "throwing" ||
     fn.trend === "worsening" ||
     fn.pop === "yes" ||
-    fn.boneTenderness === "yes"
+    fn.boneTenderness === "yes" ||
+    (skeletallyImmature &&
+      (region === "hip" || region === "thigh" || region === "knee"))
   ) {
     pathway = "sportsMed";
+    if (
+      skeletallyImmature &&
+      (region === "hip" || region === "thigh" || region === "knee")
+    )
+      reasons.push(
+        L(
+          "In a still-growing athlete, hip, thigh, or knee pain deserves a check — a hip growth-plate problem (a slipped growth plate) can even show up as knee pain.",
+          "En un atleta que aún está creciendo, el dolor de cadera, muslo o rodilla merece una revisión — un problema de la placa de crecimiento de la cadera (un deslizamiento) puede incluso manifestarse como dolor de rodilla.",
+        ),
+      );
     if (fn.boneTenderness === "yes")
       reasons.push(
         skeletallyImmature
