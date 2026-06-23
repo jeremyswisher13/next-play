@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/*
+  Next Play — design tokens
+  Medical, trustworthy, premium. Calm teal brand + neutral slate ink.
+  Pathway colors are paired ALWAYS with an icon + text label so we never
+  rely on color alone (accessibility + safety).
+*/
+@theme {
+  --color-brand: #0f766e; /* teal-700 */
+  --color-brand-strong: #115e59; /* teal-800 */
+  --color-brand-soft: #f0fdfa; /* teal-50 */
+  --color-brand-ring: #5eead4; /* teal-300 */
+
+  --color-ink: #0f172a; /* slate-900 */
+  --color-ink-soft: #334155; /* slate-700 */
+  --color-muted: #64748b; /* slate-500 */
+  --color-line: #e2e8f0; /* slate-200 */
+  --color-surface: #ffffff;
+  --color-canvas: #f8fafc; /* slate-50 */
+
+  /* Care pathway palette */
+  --color-emergency: #dc2626;
+  --color-emergency-soft: #fef2f2;
+  --color-emergency-line: #fecaca;
+
+  --color-urgent: #ea580c;
+  --color-urgent-soft: #fff7ed;
+  --color-urgent-line: #fed7aa;
+
+  --color-sportsmed: #2563eb;
+  --color-sportsmed-soft: #eff6ff;
+  --color-sportsmed-line: #bfdbfe;
+
+  --color-monitor: #059669;
+  --color-monitor-soft: #ecfdf5;
+  --color-monitor-line: #a7f3d0;
+
+  --radius-card: 1rem;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Comfortable for a worried parent on a phone */
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Large, obvious focus state for keyboard + switch users */
+:focus-visible {
+  outline: 3px solid var(--color-brand-ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Generous tap targets everywhere */
+button,
+a[role="button"],
+[role="radio"],
+[role="checkbox"] {
+  touch-action: manipulation;
+}
+
+/* Print: used by the clinician summary page */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  .print-block {
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+  }
+}
