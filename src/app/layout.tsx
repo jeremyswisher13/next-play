@@ -4,14 +4,42 @@ import { Providers } from "@/components/Providers";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 
+// Absolute base for link-preview metadata (iMessage/Slack/Twitter fetch these).
+const SITE_URL = "https://jeremyswisher13.github.io/next-play";
+const OG_IMAGE = `${SITE_URL}/og.png`;
+const TITLE = "Next Play — Clearer injury decisions. Safer return to play.";
+const DESCRIPTION =
+  "Bilingual (English / Español) sports-injury navigator. Find the next safest step after a sports injury — emergency, urgent, sports-medicine, or monitor. Guidance only; not a diagnosis.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Next Play — Clearer injury decisions. Safer return to play.",
+    default: TITLE,
     template: "%s · Next Play",
   },
-  description:
-    "Next Play helps athletes, parents, coaches, athletic trainers, and clinicians find the next safest step after a sports injury — in English or Spanish. Guidance only; not a diagnosis.",
+  description: DESCRIPTION,
   applicationName: "Next Play",
+  openGraph: {
+    type: "website",
+    siteName: "Next Play",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: `${SITE_URL}/`,
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Next Play — Clearer injury decisions. Safer return to play.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [OG_IMAGE],
+  },
 };
 
 export const viewport: Viewport = {
