@@ -49,7 +49,6 @@ export function evaluateTriage(intake: Intake): TriageResult {
   const region = intake.bodyRegion;
   const mech = intake.mechanism;
   const isHead = region === "head";
-  const isHeat = region === "heat" || mech === "heat";
 
   // Which red flags did the user actually check?
   const checked = redFlags.filter((f) => intake.redFlags.includes(f.id));
@@ -57,6 +56,18 @@ export function evaluateTriage(intake: Intake): TriageResult {
   const checkedUrgent = checked.filter((f) => f.tier === "urgent");
   const hasConcussionSymptom = checked.some((f) => f.category === "concussion");
   const hasFlag = (id: string) => intake.redFlags.includes(id);
+  // Heat context = heat region/mechanism OR any heat symptom was checked (so a
+  // heat collapse mis-coded under a non-heat region still gets cooling guidance
+  // and the heat-illness roadmap).
+  const isHeat =
+    region === "heat" ||
+    mech === "heat" ||
+    checked.some((f) => f.category === "heat");
+
+  // Inability to move the head or neck after injury is a spine/neuro emergency,
+  // not merely "urgent".
+  const neuroImmobility =
+    (region === "head" || region === "neck") && fn.canMove === "no";
 
   // ── COMBINATIONS that are dangerous together (escalate beyond single flags) ─
   // Compartment syndrome: severe pain out of proportion + rapidly worsening
@@ -95,9 +106,17 @@ export function evaluateTriage(intake: Intake): TriageResult {
   // impact, neck pain after trauma, neuro symptoms, chest pain/fainting,
   // trouble breathing, open fracture, and heat illness with altered mental
   // status — see src/content/redFlags.ts.
-  if (checkedEmergency.length > 0 || compartmentPattern) {
+  if (checkedEmergency.length > 0 || compartmentPattern || neuroImmobility) {
     pathway = "emergency";
     checkedEmergency.forEach((f) => reasons.push(flagLabel(f.id)));
+    if (neuroImmobility) {
+      reasons.push(
+        L(
+          "Not being able to move the head or neck after an injury can mean a serious neck/spine injury and needs emergency evaluation. Do not move the athlete.",
+          "No poder mover la cabeza o el cuello después de una lesión puede indicar una lesión grave de cuello o columna y necesita evaluación de emergencia. No mueva al atleta.",
+        ),
+      );
+    }
     if (compartmentPattern) {
       reasons.push(
         L(
@@ -160,6 +179,14 @@ export function evaluateTriage(intake: Intake): TriageResult {
         "No debe volver a jugar hasta que lo evalúen.",
       ),
     );
+    if (hasFlag("severePain")) {
+      recommendations.push(
+        L(
+          "Because the pain is severe, watch for compartment syndrome: get emergency care right away if the area becomes very tight, numb, cold, or pale, or the pain keeps climbing.",
+          "Como el dolor es intenso, vigile el síndrome compartimental: busque atención de emergencia de inmediato si la zona se pone muy tensa, entumecida, fría o pálida, o el dolor sigue aumentando.",
+        ),
+      );
+    }
   }
 
   // ── RULE 3 — HEAD / CONCUSSION region → always evaluate ────────────────────
@@ -190,15 +217,20 @@ export function evaluateTriage(intake: Intake): TriageResult {
     mech === "throwing" ||
     fn.trend === "worsening" ||
     fn.pop === "yes" ||
-    (skeletallyImmature && fn.boneTenderness === "yes")
+    fn.boneTenderness === "yes"
   ) {
     pathway = "sportsMed";
-    if (skeletallyImmature && fn.boneTenderness === "yes")
+    if (fn.boneTenderness === "yes")
       reasons.push(
-        L(
-          "In a still-growing athlete, tenderness right over the bone can mean a growth-plate (physeal) injury rather than a simple sprain, and should be checked.",
-          "En un atleta que aún está creciendo, el dolor justo sobre el hueso puede ser una lesión de la placa de crecimiento (fisis) y no un simple esguince, y debe revisarse.",
-        ),
+        skeletallyImmature
+          ? L(
+              "In a still-growing athlete, tenderness right over the bone can mean a growth-plate (physeal) injury rather than a simple sprain, and should be checked.",
+              "En un atleta que aún está creciendo, el dolor justo sobre el hueso puede ser una lesión de la placa de crecimiento (fisis) y no un simple esguince, y debe revisarse.",
+            )
+          : L(
+              "Tenderness right over the bone can be a sign of a fracture rather than a simple sprain, and is worth an evaluation.",
+              "El dolor justo sobre el hueso puede ser señal de una fractura y no de un simple esguince, y conviene una evaluación.",
+            ),
       );
     if (mech === "overuse")
       reasons.push(

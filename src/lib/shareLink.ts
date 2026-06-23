@@ -31,7 +31,10 @@ export function encodeIntake(intake: Intake): string {
 export function decodeIntake(encoded: string): Intake | null {
   try {
     const obj = JSON.parse(fromBase64Url(encoded)) as Intake;
-    if (!obj || typeof obj !== "object" || !obj.locale) return null;
+    if (!obj || typeof obj !== "object") return null;
+    // Only trust a known locale — a bogus value would break ui[locale] lookups
+    // and could poison the saved language preference.
+    if (obj.locale !== "en" && obj.locale !== "es") return null;
     // Defensive defaults so a malformed link still renders safely.
     return {
       locale: obj.locale,

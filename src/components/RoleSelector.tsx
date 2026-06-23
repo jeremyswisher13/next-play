@@ -27,9 +27,9 @@ interface RoleSelectorProps {
 }
 
 export function RoleSelector({ value, onChange }: RoleSelectorProps) {
-  const { t } = useLocale();
+  const { t, ui } = useLocale();
   return (
-    <div role="radiogroup" className="grid gap-3">
+    <div role="radiogroup" aria-label={ui.start.roleLabel} className="grid gap-3">
       {roles.map((role) => {
         const Icon = icons[role.id];
         return (

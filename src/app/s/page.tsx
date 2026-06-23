@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { decodeIntake } from "@/lib/shareLink";
 import { evaluateTriage, isIntakeReadyForResult } from "@/lib/triage";
@@ -53,7 +54,26 @@ export default function SharedSummaryPage() {
   return (
     <div className="space-y-5">
       <Badge tone="brand">{ui.summary.readOnlyBadge}</Badge>
+
+      {result.pathway === "emergency" ? (
+        <a
+          href="tel:911"
+          className={cn(buttonVariants({ variant: "danger", size: "lg" }))}
+        >
+          <Phone className="h-5 w-5" aria-hidden="true" />
+          {ui.result.callNow}
+        </a>
+      ) : null}
+
       <ClinicianSummary intake={intake} result={result} />
+
+      <Link
+        href="/start"
+        className="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline"
+      >
+        {ui.result.incompleteCta}
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </Link>
     </div>
   );
 }

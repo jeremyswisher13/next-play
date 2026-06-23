@@ -18,6 +18,8 @@ export function Progress({ current, total, label, className }: ProgressProps) {
       <div
         className="h-2 w-full overflow-hidden rounded-full bg-line"
         role="progressbar"
+        aria-label={label || "Progress"}
+        aria-valuetext={label || undefined}
         aria-valuenow={current}
         aria-valuemin={1}
         aria-valuemax={total}

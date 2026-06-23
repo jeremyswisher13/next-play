@@ -69,6 +69,10 @@ export const emergencyActions: EmergencyAction[] = [
         en: "Keep cooling until help arrives — do not wait to cool at the hospital.",
         es: "Siga enfriando hasta que llegue la ayuda — no espere para enfriar en el hospital.",
       },
+      {
+        en: "Ease off active cooling once the athlete is clearly cooler and more alert or starts shivering, so they don't get too cold.",
+        es: "Reduzca el enfriamiento activo cuando el atleta esté claramente más fresco y más alerta o empiece a temblar, para que no se enfríe demasiado.",
+      },
     ],
   },
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
@@ -19,9 +19,12 @@ export default function IntakePage() {
   const { ui } = useLocale();
   const { intake, update } = useIntake();
   const [step, setStep] = useState(0);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
+    // Move focus to the new step heading so screen readers announce the change.
+    headingRef.current?.focus();
   }, [step]);
 
   const canContinue =
@@ -64,7 +67,11 @@ export default function IntakePage() {
       />
 
       <header>
-        <h1 className="text-2xl font-extrabold tracking-tight text-ink">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-2xl font-extrabold tracking-tight text-ink outline-none"
+        >
           {titles[step]}
         </h1>
         <p className="mt-1 text-ink-soft">{subs[step]}</p>

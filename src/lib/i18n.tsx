@@ -45,9 +45,10 @@ export function LocaleProvider({
     }
   }, []);
 
-  // Keep <html lang> in sync for accessibility + correct browser behavior.
+  // Keep <html lang> and the tab title in sync with the chosen language.
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.title = `${ui[locale].appName} — ${ui[locale].tagline}`;
   }, [locale]);
 
   const setLocale = useCallback((l: Locale) => {

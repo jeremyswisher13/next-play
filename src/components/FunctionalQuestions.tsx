@@ -15,13 +15,15 @@ function Segmented({
   options,
   value,
   onChange,
+  label,
 }: {
   options: Option[];
   value?: string;
   onChange: (value: string) => void;
+  label: string;
 }) {
   return (
-    <div role="radiogroup" className="grid grid-cols-3 gap-2">
+    <div role="radiogroup" aria-label={label} className="grid grid-cols-3 gap-2">
       {options.map((opt) => {
         const active = value === opt.value;
         return (
@@ -70,6 +72,7 @@ export function FunctionalQuestions() {
           <div key={q.key}>
             <p className="mb-2 font-medium text-ink">{ui.functional[q.key]}</p>
             <Segmented
+              label={ui.functional[q.key]}
               options={options}
               value={current}
               onChange={(value) =>

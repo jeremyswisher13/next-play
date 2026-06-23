@@ -14,7 +14,7 @@
 
   --color-ink: #0f172a; /* slate-900 */
   --color-ink-soft: #334155; /* slate-700 */
-  --color-muted: #64748b; /* slate-500 */
+  --color-muted: #475569; /* slate-600 — AA contrast on tinted surfaces */
   --color-line: #e2e8f0; /* slate-200 */
   --color-surface: #ffffff;
   --color-canvas: #f8fafc; /* slate-50 */
@@ -25,6 +25,7 @@
   --color-emergency-line: #fecaca;
 
   --color-urgent: #ea580c;
+  --color-urgent-strong: #c2410c; /* AA text/icon on urgent-soft */
   --color-urgent-soft: #fff7ed;
   --color-urgent-line: #fed7aa;
 
@@ -33,6 +34,7 @@
   --color-sportsmed-line: #bfdbfe;
 
   --color-monitor: #059669;
+  --color-monitor-strong: #047857; /* AA text/icon on monitor-soft */
   --color-monitor-soft: #ecfdf5;
   --color-monitor-line: #a7f3d0;
 
@@ -59,7 +61,7 @@ body {
 
 /* Large, obvious focus state for keyboard + switch users */
 :focus-visible {
-  outline: 3px solid var(--color-brand-ring);
+  outline: 3px solid var(--color-brand);
   outline-offset: 2px;
   border-radius: 6px;
 }

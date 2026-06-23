@@ -1,8 +1,10 @@
 "use client";
 
-import { Check } from "lucide-react";
-import { redFlags, screenedCategories } from "@/content/redFlags";
+import Link from "next/link";
+import { Check, Siren, Phone } from "lucide-react";
+import { redFlags, screenedCategories, getRedFlag } from "@/content/redFlags";
 import { CheckboxRow } from "@/components/ui/checkbox-row";
+import { buttonVariants } from "@/components/ui/button";
 import { useIntake } from "@/lib/store";
 import { useLocale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -28,9 +30,41 @@ export function RedFlagChecklist() {
   );
 
   const noneSelected = intake.redFlags.length === 0;
+  const hasEmergencyFlag = intake.redFlags.some(
+    (id) => getRedFlag(id)?.tier === "emergency",
+  );
 
   return (
     <div className="space-y-6">
+      {hasEmergencyFlag ? (
+        <div
+          role="alert"
+          className="rounded-2xl border-2 border-emergency-line bg-emergency-soft p-4"
+        >
+          <p className="flex items-center gap-2 font-bold text-emergency">
+            <Siren className="h-5 w-5 shrink-0" aria-hidden="true" />
+            {ui.intake.redFlagAlertTitle}
+          </p>
+          <p className="mt-1 text-sm text-ink-soft">
+            {ui.intake.redFlagAlertBody}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href="tel:911"
+              className={buttonVariants({ variant: "danger", size: "sm" })}
+            >
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              {ui.result.callNow}
+            </a>
+            <Link
+              href="/emergency"
+              className={buttonVariants({ variant: "secondary", size: "sm" })}
+            >
+              {ui.landing.emergencyEntrySub}
+            </Link>
+          </div>
+        </div>
+      ) : null}
       {categories.map((category) => {
         const flags = redFlags.filter((f) => f.category === category);
         const heading = headings[category];

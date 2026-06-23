@@ -11,9 +11,13 @@ interface MechanismSelectorProps {
 }
 
 export function MechanismSelector({ value, onChange }: MechanismSelectorProps) {
-  const { t } = useLocale();
+  const { t, ui } = useLocale();
   return (
-    <div role="radiogroup" className="grid gap-3 sm:grid-cols-2">
+    <div
+      role="radiogroup"
+      aria-label={ui.intake.mechanismTitle}
+      className="grid gap-3 sm:grid-cols-2"
+    >
       {mechanisms.map((mech) => (
         <RadioCard
           key={mech.id}

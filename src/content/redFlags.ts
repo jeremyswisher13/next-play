@@ -275,19 +275,31 @@ export function screenedCategories(
   mechanism?: MechanismId,
 ): RedFlagCategory[] {
   const categories: RedFlagCategory[] = ["global"];
+  // Concussion symptoms: head/neck regions, impact mechanisms, or the "other"
+  // catch-all (a head/whiplash injury can be coded under any of these).
   if (
     bodyRegion === "head" ||
     bodyRegion === "neck" ||
+    bodyRegion === "other" ||
     mechanism === "contact" ||
     mechanism === "fall"
   ) {
     categories.push("concussion");
   }
+  // Heat symptoms: the heat region, or ANY exertional mechanism — heat illness
+  // can strike during any hard activity and is frequently mis-coded. The flags
+  // are self-qualifying ("in the heat"), so they read as not-applicable when
+  // they don't apply.
   if (
     bodyRegion === "heat" ||
     mechanism === "heat" ||
     mechanism === "sprinting" ||
-    mechanism === "unknown"
+    mechanism === "unknown" ||
+    mechanism === "contact" ||
+    mechanism === "fall" ||
+    mechanism === "overuse" ||
+    mechanism === "throwing" ||
+    mechanism === "twist"
   ) {
     categories.push("heat");
   }

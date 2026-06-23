@@ -14,9 +14,13 @@ export function BodyRegionSelector({
   value,
   onChange,
 }: BodyRegionSelectorProps) {
-  const { t } = useLocale();
+  const { t, ui } = useLocale();
   return (
-    <div role="radiogroup" className="grid gap-3 sm:grid-cols-2">
+    <div
+      role="radiogroup"
+      aria-label={ui.intake.regionTitle}
+      className="grid gap-3 sm:grid-cols-2"
+    >
       {bodyRegions.map((region) => (
         <RadioCard
           key={region.id}

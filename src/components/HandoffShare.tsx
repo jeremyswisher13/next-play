@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { Link2, QrCode as QrIcon, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { QrCode } from "@/components/QrCode";
 import { useLocale } from "@/lib/i18n";
+
+// The QR library (~26 KB) loads only when the user taps "Show QR code".
+const QrCode = dynamic(
+  () => import("@/components/QrCode").then((m) => m.QrCode),
+  { ssr: false },
+);
 import { buildShareUrl } from "@/lib/shareLink";
 import type { Intake } from "@/lib/types";
 
@@ -51,7 +57,7 @@ export function HandoffShare({ intake }: { intake: Intake }) {
       </div>
       {showQr && url ? (
         <div className="mt-5 flex flex-col items-center gap-2">
-          <QrCode value={url} />
+          <QrCode value={url} alt={ui.share.scanToOpen} />
           <p className="text-sm text-muted">{ui.share.scanToOpen}</p>
         </div>
       ) : null}

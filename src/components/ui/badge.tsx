@@ -13,9 +13,9 @@ const tones: Record<Tone, string> = {
   neutral: "bg-canvas text-ink-soft border-line",
   brand: "bg-brand-soft text-brand-strong border-brand-ring",
   emergency: "bg-emergency-soft text-emergency border-emergency-line",
-  urgent: "bg-urgent-soft text-urgent border-urgent-line",
+  urgent: "bg-urgent-soft text-urgent-strong border-urgent-line",
   sportsmed: "bg-sportsmed-soft text-sportsmed border-sportsmed-line",
-  monitor: "bg-monitor-soft text-monitor border-monitor-line",
+  monitor: "bg-monitor-soft text-monitor-strong border-monitor-line",
 };
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

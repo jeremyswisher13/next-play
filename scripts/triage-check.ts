@@ -220,16 +220,40 @@ check(
   { roadmap: "ankle" },
 );
 
-// 21. Adult control: same picture but skeletally mature → still monitor
+// 21. Adult bone-point tenderness still escalates (Ottawa-style fracture concern)
 check(
-  "Adult + bone tenderness, mild improving → monitor",
+  "Adult + bone tenderness → sportsMed",
   intake({
     athlete: { age: 22 },
     bodyRegion: "ankle",
     mechanism: "twist",
     functional: { canWalk: "yes", boneTenderness: "yes", trend: "improving" },
   }),
+  "sportsMed",
+);
+
+// 21b. Adult, no bone tenderness, mild improving → still monitor (control)
+check(
+  "Adult + no bone tenderness, mild improving → monitor",
+  intake({
+    athlete: { age: 22 },
+    bodyRegion: "ankle",
+    mechanism: "twist",
+    functional: { canWalk: "yes", boneTenderness: "no", trend: "improving" },
+  }),
   "monitor",
+);
+
+// 21c. Head/neck + cannot move → emergency (spine/neuro)
+check(
+  "Head + cannot move → emergency",
+  intake({
+    bodyRegion: "head",
+    mechanism: "contact",
+    functional: { canMove: "no" },
+  }),
+  "emergency",
+  { restrictionIncludes: "return to play" },
 );
 
 // 22. Second-impact: kept playing after a head injury with symptoms
@@ -271,9 +295,10 @@ function reachable(
 }
 
 reachable("Heat-altered reachable: other + sprinting", "other", "sprinting", "heatAltered");
-reachable("Heat-altered reachable: other + unknown", "other", "unknown", "heatAltered");
+reachable("Heat-altered reachable: other + contact", "other", "contact", "heatAltered");
+reachable("Heat-altered reachable: head + fall", "head", "fall", "heatAltered");
 reachable("Concussion reachable: neck region", "neck", undefined, "conFoggy");
-reachable("Concussion reachable: other + contact", "other", "contact", "conFoggy");
+reachable("Concussion reachable: other + twist", "other", "twist", "conFoggy");
 
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);
