@@ -54,6 +54,9 @@ export function ClinicianSummary({
           {ui.summary.print}
         </Button>
         <ShareSummaryButton text={text} label={ui.result.share} />
+        <span role="status" aria-live="polite" className="sr-only">
+          {copied ? ui.summary.copied : ""}
+        </span>
       </div>
 
       <div className="print-block rounded-2xl border border-line bg-surface p-5">

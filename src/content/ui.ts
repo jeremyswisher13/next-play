@@ -21,6 +21,7 @@ const en = {
     roadmaps: "Roadmaps",
     about: "About",
     disclaimer: "Disclaimer",
+    emergency: "Emergency",
   },
 
   common: {
@@ -152,6 +153,7 @@ const en = {
     generateSummary: "Generate clinician summary",
     share: "Share with parent / coach / ATC",
     restartCta: "Start a new injury check",
+    editAnswers: "Edit my answers",
     callNow: "Call 911 now",
     disclaimerAtBottom:
       "Next Play gives general guidance based on what you entered. It does not diagnose and does not replace evaluation by a clinician.",
@@ -194,8 +196,13 @@ const en = {
       functional: "Functional findings",
       pathway: "Care pathway generated",
       concerns: "Parent / athlete concerns",
+      rechecked: "Re-check vs. first check",
     },
     yearsOld: "years old",
+    recheckFirst: "First checked",
+    recheckNow: "Now",
+    recheckNew: "New warning signs",
+    recheckResolved: "Resolved",
     noConcerns: "None entered",
     noRedFlags: "None of the screened red flags were reported.",
     disclaimerLine:
@@ -265,6 +272,7 @@ const es: UIStrings = {
     roadmaps: "Guías",
     about: "Acerca de",
     disclaimer: "Aviso legal",
+    emergency: "Emergencia",
   },
 
   common: {
@@ -396,6 +404,7 @@ const es: UIStrings = {
     generateSummary: "Generar resumen para el médico",
     share: "Compartir con padre / entrenador / ATC",
     restartCta: "Comenzar una nueva evaluación",
+    editAnswers: "Editar mis respuestas",
     callNow: "Llame al 911 ahora",
     disclaimerAtBottom:
       "Next Play ofrece orientación general según lo que usted ingresó. No diagnostica y no reemplaza la evaluación de un profesional.",
@@ -438,8 +447,13 @@ const es: UIStrings = {
       functional: "Hallazgos funcionales",
       pathway: "Vía de atención generada",
       concerns: "Preocupaciones del padre / atleta",
+      rechecked: "Revisión vs. primera evaluación",
     },
     yearsOld: "años",
+    recheckFirst: "Primera evaluación",
+    recheckNow: "Ahora",
+    recheckNew: "Nuevos signos de alarma",
+    recheckResolved: "Resueltos",
     noConcerns: "Ninguna ingresada",
     noRedFlags: "No se reportó ninguno de los signos de alarma evaluados.",
     disclaimerLine:

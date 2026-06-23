@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -15,6 +16,23 @@ export default function RecheckPage() {
   const router = useRouter();
   const { ui } = useLocale();
   const { intake, hydrated, updateFunctional, update } = useIntake();
+
+  // Snapshot the first assessment once, before the user edits anything here, so
+  // the hand-off summary can show change over time.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!intake.baseline && isIntakeReadyForResult(intake)) {
+      update({
+        baseline: {
+          redFlags: [...intake.redFlags],
+          functional: { ...intake.functional },
+          capturedAt: new Date().toISOString(),
+        },
+      });
+    }
+    // Capture exactly once on entry; intentionally not re-running on edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   if (!hydrated) {
     return <div className="py-16 text-center text-muted">…</div>;

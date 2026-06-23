@@ -2,7 +2,7 @@ import type { Intake, Locale, LocalizedText, TriageResult } from "@/lib/types";
 import { ui as uiDict } from "@/content/ui";
 import { getBodyRegion } from "@/content/bodyRegions";
 import { getMechanism } from "@/content/mechanisms";
-import { screenedRedFlags } from "@/content/redFlags";
+import { getRedFlag, screenedRedFlags } from "@/content/redFlags";
 import { roles } from "@/content/roles";
 import { functionalQuestions } from "@/content/functionalQuestions";
 
@@ -73,7 +73,7 @@ export function buildSummaryRows(
   const pathwayLabel = ui.pathwayLabels[result.pathway];
   const reasons = result.reasons.join("; ");
 
-  return [
+  const rows: SummaryRow[] = [
     {
       label: f.generated,
       value: now.toLocaleString(locale, {
@@ -127,6 +127,38 @@ export function buildSummaryRows(
       value: intake.concerns?.trim() || ui.summary.noConcerns,
     },
   ];
+
+  // If the injury was re-checked, append a "change since first check" row.
+  if (intake.baseline) {
+    const b = intake.baseline;
+    const labelsFor = (ids: string[]) =>
+      ids
+        .map((id) => {
+          const rf = getRedFlag(id);
+          return rf ? t(rf.label) : null;
+        })
+        .filter((x): x is string => Boolean(x));
+    const newFlags = labelsFor(
+      intake.redFlags.filter((id) => !b.redFlags.includes(id)),
+    );
+    const resolved = labelsFor(
+      b.redFlags.filter((id) => !intake.redFlags.includes(id)),
+    );
+    const nowTrend = intake.functional.trend
+      ? answerLabel("trend", intake.functional.trend)
+      : np;
+    rows.push({
+      label: f.rechecked,
+      value: [
+        `${ui.summary.recheckFirst}: ${formatDateTime(b.capturedAt, locale) ?? np}`,
+        `${ui.summary.recheckNow}: ${nowTrend}`,
+        `${ui.summary.recheckNew}: ${newFlags.length ? newFlags.join(", ") : ui.common.none}`,
+        `${ui.summary.recheckResolved}: ${resolved.length ? resolved.join(", ") : ui.common.none}`,
+      ].join("\n"),
+    });
+  }
+
+  return rows;
 }
 
 /** Flatten the summary into copy/share/print-friendly plain text. */

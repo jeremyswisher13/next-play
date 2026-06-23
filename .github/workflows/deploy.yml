@@ -30,6 +30,10 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           BASE_PATH: /next-play
+      - name: Generate offline service worker
+        run: node scripts/generate-sw.mjs
+        env:
+          BASE_PATH: /next-play
       - name: Disable Jekyll (serve _next/ assets)
         run: touch ./out/.nojekyll
       - uses: actions/upload-pages-artifact@v3

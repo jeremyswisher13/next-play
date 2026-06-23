@@ -119,6 +119,12 @@ export interface Intake {
   concerns?: string;
   /** ISO time when a 72-hour re-check becomes due (set by the user). */
   recheckAt?: string;
+  /** Snapshot of the first assessment, captured when a re-check begins. */
+  baseline?: {
+    redFlags: string[];
+    functional: FunctionalAnswers;
+    capturedAt: string;
+  };
 }
 
 /** Output of evaluateTriage() — deterministic, inspectable, localized. */

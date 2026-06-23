@@ -18,6 +18,7 @@ import {
   RotateCcw,
   ArrowRight,
   Check,
+  Pencil,
 } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 import { useIntake } from "@/lib/store";
@@ -245,6 +246,10 @@ export default function ResultPage() {
           className="h-14 w-full text-lg"
         />
         <ShareLinkButton intake={intake} variant="secondary" />
+        <Link href="/intake" className={buttonVariants({ variant: "ghost" })}>
+          <Pencil className="h-4 w-4" aria-hidden="true" />
+          {ui.result.editAnswers}
+        </Link>
         <Button
           variant="ghost"
           onClick={() => {

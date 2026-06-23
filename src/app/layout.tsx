@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 // Absolute base for link-preview metadata (iMessage/Slack/Twitter fetch these).
 const SITE_URL = "https://jeremyswisher13.github.io/next-play";
@@ -57,6 +58,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
+          <ServiceWorkerRegister />
           <div className="flex min-h-dvh flex-col">
             <SiteHeader />
             <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">

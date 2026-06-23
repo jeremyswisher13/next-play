@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Activity } from "lucide-react";
+import { Activity, Siren } from "lucide-react";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useLocale } from "@/lib/i18n";
 
@@ -19,7 +19,17 @@ export function SiteHeader() {
           </span>
           {ui.appName}
         </Link>
-        <LanguageToggle />
+        <div className="flex items-center gap-2">
+          <Link
+            href="/emergency"
+            aria-label={ui.nav.emergency}
+            title={ui.nav.emergency}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-emergency-line bg-emergency-soft text-emergency hover:brightness-95"
+          >
+            <Siren className="h-5 w-5" aria-hidden="true" />
+          </Link>
+          <LanguageToggle />
+        </div>
       </div>
     </header>
   );
