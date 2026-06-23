@@ -35,13 +35,18 @@ export function ShareLinkButton({
   }
 
   return (
-    <Button variant={variant} onClick={copy} className={className}>
-      {copied ? (
-        <Check className="h-4 w-4" aria-hidden="true" />
-      ) : (
-        <Link2 className="h-4 w-4" aria-hidden="true" />
-      )}
-      {copied ? ui.result.linkCopied : ui.result.shareLink}
-    </Button>
+    <>
+      <Button variant={variant} onClick={copy} className={className}>
+        {copied ? (
+          <Check className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Link2 className="h-4 w-4" aria-hidden="true" />
+        )}
+        {copied ? ui.result.linkCopied : ui.result.shareLink}
+      </Button>
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? ui.result.linkCopied : ""}
+      </span>
+    </>
   );
 }

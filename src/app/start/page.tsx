@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
@@ -21,10 +22,30 @@ const levelOrder: CompetitionLevel[] = [
   "adult",
 ];
 
+type WhenChip = "justNow" | "earlierToday" | "yesterday" | "daysAgo";
+
+/** Map a relative chip to a datetime-local value ("YYYY-MM-DDTHH:mm"). */
+function whenToLocal(kind: WhenChip): string {
+  const d = new Date();
+  if (kind === "earlierToday") d.setHours(Math.max(0, d.getHours() - 4));
+  if (kind === "yesterday") d.setDate(d.getDate() - 1);
+  if (kind === "daysAgo") d.setDate(d.getDate() - 3);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
 export default function StartPage() {
   const router = useRouter();
   const { locale, setLocale, ui } = useLocale();
   const { intake, update, updateAthlete } = useIntake();
+  const [whenChip, setWhenChip] = useState<WhenChip | null>(null);
+
+  const whenChips: { kind: WhenChip; label: string }[] = [
+    { kind: "justNow", label: ui.start.injuryJustNow },
+    { kind: "earlierToday", label: ui.start.injuryEarlierToday },
+    { kind: "yesterday", label: ui.start.injuryYesterday },
+    { kind: "daysAgo", label: ui.start.injuryDaysAgo },
+  ];
 
   function chooseLanguage(l: Locale) {
     setLocale(l);
@@ -139,20 +160,47 @@ export default function StartPage() {
           </select>
         </label>
 
-        <label className="block">
+        <div>
           <span className="mb-1 block text-sm font-medium text-ink-soft">
             {ui.start.injuryWhen}{" "}
             <span className="text-muted">({ui.common.optional})</span>
           </span>
-          <input
-            type="datetime-local"
-            className={inputClass}
-            value={intake.athlete.injuryDateTime ?? ""}
-            onChange={(e) =>
-              updateAthlete({ injuryDateTime: e.target.value || undefined })
-            }
-          />
-        </label>
+          <div className="grid grid-cols-2 gap-2">
+            {whenChips.map((c) => (
+              <button
+                key={c.kind}
+                type="button"
+                aria-pressed={whenChip === c.kind}
+                onClick={() => {
+                  setWhenChip(c.kind);
+                  updateAthlete({ injuryDateTime: whenToLocal(c.kind) });
+                }}
+                className={cn(
+                  "min-h-12 rounded-xl border px-3 text-sm font-semibold transition-colors",
+                  whenChip === c.kind
+                    ? "border-brand bg-brand text-white"
+                    : "border-line bg-surface text-ink-soft hover:bg-canvas",
+                )}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <details className="mt-2">
+            <summary className="cursor-pointer text-sm font-semibold text-brand">
+              {ui.start.injuryExact}
+            </summary>
+            <input
+              type="datetime-local"
+              className={cn(inputClass, "mt-2")}
+              value={intake.athlete.injuryDateTime ?? ""}
+              onChange={(e) => {
+                setWhenChip(null);
+                updateAthlete({ injuryDateTime: e.target.value || undefined });
+              }}
+            />
+          </details>
+        </div>
       </section>
 
       <Button

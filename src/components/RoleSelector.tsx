@@ -35,6 +35,7 @@ export function RoleSelector({ value, onChange }: RoleSelectorProps) {
         return (
           <RadioCard
             key={role.id}
+            name="role"
             selected={value === role.id}
             onSelect={() => onChange(role.id)}
             title={t(role.label)}

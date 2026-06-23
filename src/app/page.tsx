@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Map,
@@ -13,27 +15,45 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 import { useIntake } from "@/lib/store";
+import { loadReminder, type ReminderRecord } from "@/lib/reminder";
+import { isIntakeReadyForResult } from "@/lib/triage";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   const { ui } = useLocale();
-  const { intake, hydrated } = useIntake();
+  const { intake, hydrated, update } = useIntake();
+  const router = useRouter();
   const l = ui.landing;
 
-  const recheckDue =
+  const [reminder, setReminder] = useState<ReminderRecord | null>(null);
+  useEffect(() => setReminder(loadReminder()), []);
+
+  const sessionDue =
     hydrated &&
     Boolean(intake.recheckAt) &&
     new Date(intake.recheckAt as string).getTime() <= Date.now();
+  const storedDue =
+    Boolean(reminder) && new Date(reminder!.at).getTime() <= Date.now();
+  const recheckDue = sessionDue || storedDue;
+
+  function startRecheck() {
+    // If the tab was closed and the session lost the injury, restore it.
+    if (!isIntakeReadyForResult(intake) && reminder?.intake) {
+      update(reminder.intake);
+    }
+    router.push("/recheck");
+  }
 
   return (
     <div className="space-y-8">
       {/* Re-check banner (only after a check-in time has passed) */}
       {recheckDue ? (
-        <Link
-          href="/recheck"
-          className="flex items-center gap-3 rounded-2xl border border-brand-ring bg-brand-soft p-4 transition-colors hover:bg-white"
+        <button
+          type="button"
+          onClick={startRecheck}
+          className="flex w-full items-center gap-3 rounded-2xl border border-brand-ring bg-brand-soft p-4 text-left transition-colors hover:bg-white"
         >
           <BellRing className="h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
           <span className="flex-1">
@@ -47,7 +67,7 @@ export default function HomePage() {
           <span className="text-sm font-semibold text-brand">
             {l.recheckBannerCta}
           </span>
-        </Link>
+        </button>
       ) : null}
 
       {/* Hero */}

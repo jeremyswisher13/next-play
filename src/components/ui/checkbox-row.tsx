@@ -10,7 +10,8 @@ interface CheckboxRowProps {
 }
 
 /**
- * A large, tappable multi-select row (used for the red-flag checklist).
+ * A large, tappable multi-select row backed by a real (visually hidden)
+ * checkbox input, so it is fully keyboard-operable with correct semantics.
  * State is conveyed by a checkbox icon + label, not color alone.
  */
 export function CheckboxRow({
@@ -20,13 +21,10 @@ export function CheckboxRow({
   tone = "default",
 }: CheckboxRowProps) {
   return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      onClick={onToggle}
+    <label
       className={cn(
-        "flex w-full items-start gap-3 rounded-xl border bg-surface px-4 py-4 text-left transition-colors min-h-16",
+        "flex w-full cursor-pointer items-start gap-3 rounded-xl border bg-surface px-4 py-4 text-left transition-colors min-h-16",
+        "has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand",
         checked
           ? tone === "alert"
             ? "border-urgent bg-urgent-soft ring-1 ring-urgent"
@@ -34,6 +32,12 @@ export function CheckboxRow({
           : "border-line hover:border-brand-ring hover:bg-canvas",
       )}
     >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onToggle}
+        className="sr-only"
+      />
       <span
         className={cn(
           "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors",
@@ -48,6 +52,6 @@ export function CheckboxRow({
         {checked ? <Check className="h-4 w-4" strokeWidth={3} /> : null}
       </span>
       <span className="flex-1 font-medium text-ink">{label}</span>
-    </button>
+    </label>
   );
 }

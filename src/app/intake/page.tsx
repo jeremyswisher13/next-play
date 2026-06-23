@@ -32,7 +32,9 @@ export default function IntakePage() {
       ? Boolean(intake.bodyRegion)
       : step === 1
         ? Boolean(intake.mechanism)
-        : true;
+        : step === 2
+          ? Boolean(intake.redFlagsAcknowledged)
+          : true;
 
   const titles = [
     ui.intake.regionTitle,

@@ -24,6 +24,7 @@ export function BodyRegionSelector({
       {bodyRegions.map((region) => (
         <RadioCard
           key={region.id}
+          name="region"
           selected={value === region.id}
           onSelect={() => onChange(region.id)}
           title={t(region.label)}

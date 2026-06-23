@@ -54,6 +54,9 @@ export function HandoffShare({ intake }: { intake: Intake }) {
           <QrIcon className="h-4 w-4" aria-hidden="true" />
           {showQr ? ui.summary.hideQr : ui.result.showQr}
         </Button>
+        <span role="status" aria-live="polite" className="sr-only">
+          {copied ? ui.result.linkCopied : ""}
+        </span>
       </div>
       {showQr && url ? (
         <div className="mt-5 flex flex-col items-center gap-2">

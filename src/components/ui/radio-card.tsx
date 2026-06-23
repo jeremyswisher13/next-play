@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 interface RadioCardProps {
   selected: boolean;
   onSelect: () => void;
+  /** Shared radio-group name — enables native arrow-key navigation. */
+  name: string;
   title: string;
   description?: string;
   icon?: ReactNode;
@@ -12,31 +14,38 @@ interface RadioCardProps {
 }
 
 /**
- * A large, tappable single-select option. Selection is shown with a filled
- * ring AND a check icon — never color alone.
+ * A large, tappable single-select option backed by a real (visually hidden)
+ * radio input, so keyboard users get arrow-key navigation and proper group
+ * semantics for free. Selection is shown with a ring AND a check icon — never
+ * color alone.
  */
 export function RadioCard({
   selected,
   onSelect,
+  name,
   title,
   description,
   icon,
   className,
 }: RadioCardProps) {
   return (
-    <button
-      type="button"
-      role="radio"
-      aria-checked={selected}
-      onClick={onSelect}
+    <label
       className={cn(
-        "flex w-full items-center gap-3 rounded-xl border bg-surface px-4 py-4 text-left transition-colors min-h-16",
+        "flex w-full cursor-pointer items-center gap-3 rounded-xl border bg-surface px-4 py-4 text-left transition-colors min-h-16",
+        "has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand",
         selected
           ? "border-brand ring-2 ring-brand bg-brand-soft"
           : "border-line hover:border-brand-ring hover:bg-canvas",
         className,
       )}
     >
+      <input
+        type="radio"
+        name={name}
+        checked={selected}
+        onChange={onSelect}
+        className="sr-only"
+      />
       {icon ? (
         <span
           className={cn(
@@ -62,6 +71,6 @@ export function RadioCard({
       >
         {selected ? <Check className="h-4 w-4" strokeWidth={3} /> : null}
       </span>
-    </button>
+    </label>
   );
 }

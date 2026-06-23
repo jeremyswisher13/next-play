@@ -21,6 +21,7 @@ export function MechanismSelector({ value, onChange }: MechanismSelectorProps) {
       {mechanisms.map((mech) => (
         <RadioCard
           key={mech.id}
+          name="mechanism"
           selected={value === mech.id}
           onSelect={() => onChange(mech.id)}
           title={t(mech.label)}

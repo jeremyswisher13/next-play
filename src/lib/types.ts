@@ -114,6 +114,9 @@ export interface Intake {
   mechanism?: MechanismId;
   /** Ids of every checked red flag (global + concussion + heat). */
   redFlags: string[];
+  /** True once the user has actively answered the warning-signs screen
+   * (checked a flag or tapped "None") — gates Continue so it can't be skipped. */
+  redFlagsAcknowledged?: boolean;
   functional: FunctionalAnswers;
   /** Free-text parent/athlete concerns for the clinician summary. */
   concerns?: string;

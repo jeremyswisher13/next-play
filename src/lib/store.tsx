@@ -15,6 +15,7 @@ import type {
   Intake,
   Locale,
 } from "@/lib/types";
+import { clearReminder } from "@/lib/reminder";
 
 const STORAGE_KEY = "nextplay.intake";
 
@@ -98,6 +99,7 @@ export function IntakeProvider({ children }: { children: ReactNode }) {
       const has = prev.redFlags.includes(id);
       return {
         ...prev,
+        redFlagsAcknowledged: true,
         redFlags: has
           ? prev.redFlags.filter((x) => x !== id)
           : [...prev.redFlags, id],
@@ -106,7 +108,11 @@ export function IntakeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const clearRedFlags = useCallback(() => {
-    setIntake((prev) => ({ ...prev, redFlags: [] }));
+    setIntake((prev) => ({
+      ...prev,
+      redFlags: [],
+      redFlagsAcknowledged: true,
+    }));
   }, []);
 
   const reset = useCallback(() => {
@@ -116,6 +122,7 @@ export function IntakeProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    clearReminder();
   }, []);
 
   const value: IntakeContextValue = {

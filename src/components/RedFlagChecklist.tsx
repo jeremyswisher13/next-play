@@ -29,7 +29,8 @@ export function RedFlagChecklist() {
     intake.mechanism,
   );
 
-  const noneSelected = intake.redFlags.length === 0;
+  const noneSelected =
+    Boolean(intake.redFlagsAcknowledged) && intake.redFlags.length === 0;
   const hasEmergencyFlag = intake.redFlags.some(
     (id) => getRedFlag(id)?.tier === "emergency",
   );

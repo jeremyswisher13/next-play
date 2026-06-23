@@ -27,21 +27,25 @@ function Segmented({
       {options.map((opt) => {
         const active = value === opt.value;
         return (
-          <button
+          <label
             key={opt.value}
-            type="button"
-            role="radio"
-            aria-checked={active}
-            onClick={() => onChange(opt.value)}
             className={cn(
-              "min-h-12 rounded-xl border px-2 py-2 text-sm font-semibold transition-colors",
+              "flex min-h-12 cursor-pointer items-center justify-center rounded-xl border px-2 py-2 text-center text-sm font-semibold transition-colors",
+              "has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand",
               active
                 ? "border-brand bg-brand text-white"
                 : "border-line bg-surface text-ink-soft hover:bg-canvas",
             )}
           >
+            <input
+              type="radio"
+              name={label}
+              checked={active}
+              onChange={() => onChange(opt.value)}
+              className="sr-only"
+            />
             {opt.label}
-          </button>
+          </label>
         );
       })}
     </div>

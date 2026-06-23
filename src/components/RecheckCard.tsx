@@ -7,17 +7,21 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useLocale } from "@/lib/i18n";
 import { useIntake } from "@/lib/store";
 import { downloadIcs } from "@/lib/ics";
+import { saveReminder } from "@/lib/reminder";
 
 const SEVENTY_TWO_HOURS = 72 * 60 * 60 * 1000;
 
 export function RecheckCard() {
   const { ui } = useLocale();
-  const { update } = useIntake();
+  const { intake, update } = useIntake();
   const [reminded, setReminded] = useState(false);
 
   function remind() {
     const at = new Date(Date.now() + SEVENTY_TWO_HOURS);
-    update({ recheckAt: at.toISOString() });
+    const iso = at.toISOString();
+    update({ recheckAt: iso });
+    // Persist so the reminder survives the tab being closed.
+    saveReminder({ ...intake, recheckAt: iso }, iso);
     setReminded(true);
   }
 
@@ -56,6 +60,9 @@ export function RecheckCard() {
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           {ui.result.recheckNow}
         </Link>
+        <span role="status" aria-live="polite" className="sr-only">
+          {reminded ? ui.result.reminderSet : ""}
+        </span>
       </div>
     </section>
   );

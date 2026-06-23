@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 import { useIntake } from "@/lib/store";
 import { isIntakeReadyForResult } from "@/lib/triage";
+import { clearReminder } from "@/lib/reminder";
 import { RedFlagChecklist } from "@/components/RedFlagChecklist";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -101,6 +102,7 @@ export default function RecheckPage() {
         size="lg"
         onClick={() => {
           update({ recheckAt: undefined });
+          clearReminder();
           router.push("/result");
         }}
       >
