@@ -99,6 +99,8 @@ export interface FunctionalAnswers {
   pop?: YesNoUnsure;
   swelling?: YesNoUnsure;
   bruising?: YesNoUnsure;
+  /** Point tenderness directly over bone — key for growth-plate injuries in kids. */
+  boneTenderness?: YesNoUnsure;
   continuedPlaying?: YesNoUnsure;
   trend?: Trend;
 }
@@ -115,6 +117,8 @@ export interface Intake {
   functional: FunctionalAnswers;
   /** Free-text parent/athlete concerns for the clinician summary. */
   concerns?: string;
+  /** ISO time when a 72-hour re-check becomes due (set by the user). */
+  recheckAt?: string;
 }
 
 /** Output of evaluateTriage() — deterministic, inspectable, localized. */

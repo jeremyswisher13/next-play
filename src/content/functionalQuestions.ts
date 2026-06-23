@@ -10,6 +10,7 @@ export type FunctionalKey =
   | "pop"
   | "swelling"
   | "bruising"
+  | "boneTenderness"
   | "continuedPlaying"
   | "trend";
 
@@ -25,6 +26,7 @@ export const functionalQuestions: FunctionalQuestion[] = [
   { key: "pop", kind: "yesno" },
   { key: "swelling", kind: "yesno" },
   { key: "bruising", kind: "yesno" },
+  { key: "boneTenderness", kind: "yesno" },
   { key: "continuedPlaying", kind: "yesno" },
   { key: "trend", kind: "trend" },
 ];

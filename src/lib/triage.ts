@@ -2,6 +2,7 @@ import { redFlags } from "@/content/redFlags";
 import type {
   BodyRegionId,
   Intake,
+  MechanismId,
   Pathway,
   RoadmapId,
   TriageResult,
@@ -55,6 +56,23 @@ export function evaluateTriage(intake: Intake): TriageResult {
   const checkedEmergency = checked.filter((f) => f.tier === "emergency");
   const checkedUrgent = checked.filter((f) => f.tier === "urgent");
   const hasConcussionSymptom = checked.some((f) => f.category === "concussion");
+  const hasFlag = (id: string) => intake.redFlags.includes(id);
+
+  // ── COMBINATIONS that are dangerous together (escalate beyond single flags) ─
+  // Compartment syndrome: severe pain out of proportion + rapidly worsening
+  // swelling is a limb-threatening surgical emergency, not merely "urgent".
+  const compartmentPattern = hasFlag("severePain") && hasFlag("rapidSwelling");
+  // Second-impact concern: a head injury where the athlete kept playing.
+  const secondImpactConcern =
+    isHead && (hasConcussionSymptom || mech === "contact" || mech === "fall") &&
+    fn.continuedPlaying === "yes";
+
+  // ── AGE / SKELETAL MATURITY ───────────────────────────────────────────────
+  // In a still-growing athlete the growth plate (physis) is weaker than nearby
+  // ligament/tendon, so a "sprain" is more likely a physeal fracture and
+  // apophysitis (e.g. Osgood-Schlatter, Sever's, Little League elbow) is common.
+  const age = intake.athlete.age;
+  const skeletallyImmature = age != null && age <= 14;
 
   const reasons: string[] = [];
   const recommendations: string[] = [];
@@ -77,9 +95,17 @@ export function evaluateTriage(intake: Intake): TriageResult {
   // impact, neck pain after trauma, neuro symptoms, chest pain/fainting,
   // trouble breathing, open fracture, and heat illness with altered mental
   // status — see src/content/redFlags.ts.
-  if (checkedEmergency.length > 0) {
+  if (checkedEmergency.length > 0 || compartmentPattern) {
     pathway = "emergency";
     checkedEmergency.forEach((f) => reasons.push(flagLabel(f.id)));
+    if (compartmentPattern) {
+      reasons.push(
+        L(
+          "Severe pain together with rapidly worsening swelling can signal a dangerous build-up of pressure in the limb (compartment syndrome) and needs emergency evaluation.",
+          "El dolor intenso junto con hinchazón que empeora rápido puede indicar una acumulación de presión peligrosa en la extremidad (síndrome compartimental) y necesita evaluación de emergencia.",
+        ),
+      );
+    }
     recommendations.push(
       L(
         "Call 911 (or your local emergency number) or go to the nearest emergency department now.",
@@ -163,9 +189,17 @@ export function evaluateTriage(intake: Intake): TriageResult {
     mech === "overuse" ||
     mech === "throwing" ||
     fn.trend === "worsening" ||
-    fn.pop === "yes"
+    fn.pop === "yes" ||
+    (skeletallyImmature && fn.boneTenderness === "yes")
   ) {
     pathway = "sportsMed";
+    if (skeletallyImmature && fn.boneTenderness === "yes")
+      reasons.push(
+        L(
+          "In a still-growing athlete, tenderness right over the bone can mean a growth-plate (physeal) injury rather than a simple sprain, and should be checked.",
+          "En un atleta que aún está creciendo, el dolor justo sobre el hueso puede ser una lesión de la placa de crecimiento (fisis) y no un simple esguince, y debe revisarse.",
+        ),
+      );
     if (mech === "overuse")
       reasons.push(
         L(
@@ -276,7 +310,51 @@ export function evaluateTriage(intake: Intake): TriageResult {
     );
   }
 
+  // SECOND-IMPACT: a head injury where the athlete kept playing.
+  if (secondImpactConcern) {
+    pushUnique(
+      reasons,
+      L(
+        "The athlete kept playing after a head injury. Returning to play before recovery raises the risk of a second, more serious brain injury — they should be removed from play and evaluated.",
+        "El atleta siguió jugando después de una lesión en la cabeza. Volver a jugar antes de recuperarse aumenta el riesgo de una segunda lesión cerebral más grave — debe ser retirado del juego y evaluado.",
+      ),
+    );
+    pushUnique(restrictions, noSameDayRtp);
+  }
+
+  // APOPHYSITIS: growth-plate overuse pattern in a young athlete (informational
+  // reason only — the pathway is already a sports-medicine evaluation).
+  if (skeletallyImmature && (mech === "overuse" || mech === "throwing")) {
+    const note = apophysitisNote(region, mech, locale);
+    if (note) pushUnique(reasons, note);
+  }
+
   return { pathway, reasons, recommendations, restrictions, roadmapType };
+}
+
+/** A growth-plate overuse note tailored to common youth apophysitis sites. */
+function apophysitisNote(
+  region: BodyRegionId | undefined,
+  mech: MechanismId | undefined,
+  locale: string,
+): string | null {
+  const L = (en: string, es: string) => (locale === "es" ? es : en);
+  if ((region === "elbow" || region === "shoulder") && mech === "throwing")
+    return L(
+      "In a young thrower, throwing-arm pain can come from the growth plate (e.g. Little League elbow or shoulder) and should be evaluated before more throwing.",
+      "En un lanzador joven, el dolor del brazo de lanzar puede venir de la placa de crecimiento (p. ej., codo u hombro de Ligas Menores) y debe evaluarse antes de seguir lanzando.",
+    );
+  if (region === "knee")
+    return L(
+      "In a still-growing athlete, knee pain with activity can come from the growth area below the kneecap (Osgood-Schlatter) and is worth checking.",
+      "En un atleta que aún crece, el dolor de rodilla con la actividad puede venir de la zona de crecimiento debajo de la rótula (Osgood-Schlatter) y conviene revisarlo.",
+    );
+  if (region === "calf" || region === "ankle")
+    return L(
+      "In a still-growing athlete, heel pain can come from the growth plate in the heel (Sever's) and is worth checking.",
+      "En un atleta que aún crece, el dolor de talón puede venir de la placa de crecimiento del talón (Sever) y conviene revisarlo.",
+    );
+  return null;
 }
 
 /** Map the injured body region to its return-to-play roadmap. */

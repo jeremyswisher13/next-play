@@ -29,6 +29,8 @@ import { CarePathwayCard } from "@/components/CarePathwayCard";
 import { First72HoursPlan } from "@/components/First72HoursPlan";
 import { ReturnToPlayRoadmap } from "@/components/ReturnToPlayRoadmap";
 import { ShareSummaryButton } from "@/components/ShareSummaryButton";
+import { ShareLinkButton } from "@/components/ShareLinkButton";
+import { RecheckCard } from "@/components/RecheckCard";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -228,6 +230,9 @@ export default function ResultPage() {
         </Link>
       </Section>
 
+      {/* Re-check loop (not for the emergency pathway) */}
+      {result.pathway !== "emergency" ? <RecheckCard /> : null}
+
       {/* Actions */}
       <div className="no-print flex flex-col gap-3 pt-1">
         <Link href="/summary" className={buttonVariants({ size: "lg" })}>
@@ -239,6 +244,7 @@ export default function ResultPage() {
           variant="secondary"
           className="h-14 w-full text-lg"
         />
+        <ShareLinkButton intake={intake} variant="secondary" />
         <Button
           variant="ghost"
           onClick={() => {

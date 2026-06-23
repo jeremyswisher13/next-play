@@ -7,6 +7,7 @@ import { useLocale } from "@/lib/i18n";
 import { useIntake } from "@/lib/store";
 import { evaluateTriage, isIntakeReadyForResult } from "@/lib/triage";
 import { ClinicianSummary } from "@/components/ClinicianSummary";
+import { HandoffShare } from "@/components/HandoffShare";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function SummaryPage() {
@@ -56,6 +57,8 @@ export default function SummaryPage() {
       </header>
 
       <ClinicianSummary intake={intake} result={result} />
+
+      <HandoffShare intake={intake} />
     </div>
   );
 }

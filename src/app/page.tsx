@@ -8,18 +8,48 @@ import {
   X,
   Phone,
   ListChecks,
+  Siren,
+  BellRing,
 } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
+import { useIntake } from "@/lib/store";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export default function HomePage() {
   const { ui } = useLocale();
+  const { intake, hydrated } = useIntake();
   const l = ui.landing;
+
+  const recheckDue =
+    hydrated &&
+    Boolean(intake.recheckAt) &&
+    new Date(intake.recheckAt as string).getTime() <= Date.now();
 
   return (
     <div className="space-y-8">
+      {/* Re-check banner (only after a check-in time has passed) */}
+      {recheckDue ? (
+        <Link
+          href="/recheck"
+          className="flex items-center gap-3 rounded-2xl border border-brand-ring bg-brand-soft p-4 transition-colors hover:bg-white"
+        >
+          <BellRing className="h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
+          <span className="flex-1">
+            <span className="block font-bold text-ink">
+              {l.recheckBannerTitle}
+            </span>
+            <span className="block text-sm text-ink-soft">
+              {l.recheckBannerBody}
+            </span>
+          </span>
+          <span className="text-sm font-semibold text-brand">
+            {l.recheckBannerCta}
+          </span>
+        </Link>
+      ) : null}
+
       {/* Hero */}
       <section className="pt-2">
         <p className="text-sm font-semibold uppercase tracking-wide text-brand">
@@ -37,15 +67,30 @@ export default function HomePage() {
           </Link>
           <Link
             href="/roadmaps"
-            className={cn(
-              buttonVariants({ variant: "secondary", size: "lg" }),
-            )}
+            className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}
           >
             <Map className="h-5 w-5" aria-hidden="true" />
             {l.roadmapsCta}
           </Link>
         </div>
       </section>
+
+      {/* On-field emergency entry */}
+      <Link
+        href="/emergency"
+        className="flex items-center gap-3 rounded-2xl border-2 border-emergency-line bg-emergency-soft p-4 transition-colors hover:brightness-[0.98]"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emergency text-white">
+          <Siren className="h-6 w-6" aria-hidden="true" />
+        </span>
+        <span className="flex-1">
+          <span className="block font-bold text-ink">{l.emergencyEntry}</span>
+          <span className="block text-sm text-ink-soft">
+            {l.emergencyEntrySub}
+          </span>
+        </span>
+        <ArrowRight className="h-5 w-5 text-emergency" aria-hidden="true" />
+      </Link>
 
       {/* Emergency note */}
       <Card className="border-urgent-line bg-urgent-soft">

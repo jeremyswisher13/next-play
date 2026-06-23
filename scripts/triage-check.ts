@@ -196,6 +196,63 @@ check(
   { restrictionIncludes: "same-day" },
 );
 
+// 19. Compartment-syndrome combination (two urgent flags → emergency)
+check(
+  "Compartment syndrome combo (severe pain + rapid swelling)",
+  intake({
+    bodyRegion: "calf",
+    mechanism: "sprinting",
+    redFlags: ["severePain", "rapidSwelling"],
+  }),
+  "emergency",
+);
+
+// 20. Young athlete + bone tenderness → physeal-fracture concern → sportsMed
+check(
+  "Young + bone tenderness (physeal concern)",
+  intake({
+    athlete: { age: 11 },
+    bodyRegion: "ankle",
+    mechanism: "twist",
+    functional: { canWalk: "yes", boneTenderness: "yes", trend: "unchanged" },
+  }),
+  "sportsMed",
+  { roadmap: "ankle" },
+);
+
+// 21. Adult control: same picture but skeletally mature → still monitor
+check(
+  "Adult + bone tenderness, mild improving → monitor",
+  intake({
+    athlete: { age: 22 },
+    bodyRegion: "ankle",
+    mechanism: "twist",
+    functional: { canWalk: "yes", boneTenderness: "yes", trend: "improving" },
+  }),
+  "monitor",
+);
+
+// 22. Second-impact: kept playing after a head injury with symptoms
+check(
+  "Second-impact (kept playing after head injury)",
+  intake({
+    bodyRegion: "head",
+    mechanism: "contact",
+    redFlags: ["conHeadache"],
+    functional: { continuedPlaying: "yes" },
+  }),
+  "urgent",
+  { restrictionIncludes: "same-day" },
+);
+
+// 23. Little League elbow: young thrower → sportsMed
+check(
+  "Young thrower + elbow",
+  intake({ athlete: { age: 12 }, bodyRegion: "elbow", mechanism: "throwing" }),
+  "sportsMed",
+  { roadmap: "elbowThrowing" },
+);
+
 // ── Reachability: the dangerous flags must be checkable under mis-coding ─────
 function reachable(
   name: string,
